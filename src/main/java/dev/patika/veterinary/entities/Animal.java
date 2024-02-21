@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "animals")
@@ -37,6 +38,16 @@ public class Animal {
     @Temporal(TemporalType.DATE)
     @Column(name = "dateOfBirth")
     private LocalDate dateOfBirth;
+
+    @OneToMany(mappedBy = "animal")
+    private List<Vaccine> vaccines;
+
+    @ManyToOne
+    @JoinColumn(name = "animal_customer_id", referencedColumnName = "customer_id")
+    private Customer customer;
+
+    @OneToMany(mappedBy = "animal")
+    private List<Appointment> appointments;
 
     private enum GENDER{
         MALE,
