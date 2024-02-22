@@ -16,7 +16,7 @@ import java.util.List;
 public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "animal_id")
+    @Column(name = "animal_id", columnDefinition = "serial")
     private Long id;
 
     @Column(name = "animal_name")
@@ -42,7 +42,7 @@ public class Animal {
     @OneToMany(mappedBy = "animal")
     private List<Vaccine> vaccines;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "animal_customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 

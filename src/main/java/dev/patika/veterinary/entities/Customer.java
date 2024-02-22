@@ -33,6 +33,6 @@ public class Customer {
     @Column(name = "customer_city")
     private String city;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Animal> animals;
 }
