@@ -6,7 +6,9 @@ import dev.patika.veterinary.entities.Animal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AnimalManager implements IAnimalService {
     private final AnimalRepo animalRepo;
 
@@ -21,7 +23,7 @@ public class AnimalManager implements IAnimalService {
 
     @Override
     public Animal get(int id) {
-        return this.animalRepo.findById(id).orElseThrow(() -> new RuntimeException("NOT FOUND"));
+        return this.animalRepo.findById((long) id).orElseThrow(() -> new RuntimeException("NOT FOUND"));
     }
 
     @Override
