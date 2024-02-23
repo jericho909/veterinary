@@ -1,6 +1,7 @@
 package dev.patika.veterinary.business.concretes;
 
 import dev.patika.veterinary.business.abstracts.ICustomerService;
+import dev.patika.veterinary.core.exceptions.NotFoundException;
 import dev.patika.veterinary.core.utils.Msg;
 import dev.patika.veterinary.dao.CustomerRepo;
 import dev.patika.veterinary.entities.Customer;
@@ -25,7 +26,7 @@ public class CustomerManager implements ICustomerService {
 
     @Override
     public Customer get(int id) {
-        return this.customerRepo.findById(id).orElseThrow(()-> new RuntimeException(Msg.NOT_FOUND));
+        return this.customerRepo.findById(id).orElseThrow(()-> new NotFoundException(Msg.NOT_FOUND));
     }
 
     @Override

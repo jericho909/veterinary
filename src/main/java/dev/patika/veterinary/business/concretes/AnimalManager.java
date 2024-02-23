@@ -1,8 +1,11 @@
 package dev.patika.veterinary.business.concretes;
 
 import dev.patika.veterinary.business.abstracts.IAnimalService;
+import dev.patika.veterinary.core.exceptions.NotFoundException;
+import dev.patika.veterinary.core.utils.Msg;
 import dev.patika.veterinary.dao.AnimalRepo;
 import dev.patika.veterinary.entities.Animal;
+import org.springframework.dao.NonTransientDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +26,8 @@ public class AnimalManager implements IAnimalService {
 
     @Override
     public Animal get(int id) {
-        return this.animalRepo.findById((long) id).orElseThrow(() -> new RuntimeException("NOT FOUND"));
+        return this.animalRepo.findById((long) id).orElseThrow(() -> new NotFoundException(Msg.NOT_FOUND) {
+        });
     }
 
     @Override

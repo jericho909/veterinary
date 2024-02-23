@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -39,11 +41,12 @@ public class Animal {
     @Column(name = "dateOfBirth")
     private LocalDate dateOfBirth;
 
-    @OneToMany(mappedBy = "animal")
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.REMOVE)
     private List<Vaccine> vaccines;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "animal_customer_id", referencedColumnName = "customer_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Customer customer;
 
     @OneToMany(mappedBy = "animal")
@@ -52,5 +55,18 @@ public class Animal {
     private enum GENDER{
         MALE,
         FEMALE
+    }
+
+    @Override
+    public String toString() {
+        return "Animal{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", species='" + species + '\'' +
+                ", breed='" + breed + '\'' +
+                ", gender=" + gender +
+                ", colour='" + colour + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                '}';
     }
 }
