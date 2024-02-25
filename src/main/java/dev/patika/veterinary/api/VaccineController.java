@@ -2,6 +2,7 @@ package dev.patika.veterinary.api;
 
 import dev.patika.veterinary.business.concretes.VaccineManager;
 import dev.patika.veterinary.core.config.modelMapper.IModelMapper;
+import dev.patika.veterinary.core.result.Result;
 import dev.patika.veterinary.core.result.ResultWithData;
 import dev.patika.veterinary.core.utils.ResultHelper;
 import dev.patika.veterinary.dto.requests.vaccine.VaccineSaveRequest;
@@ -36,5 +37,12 @@ public class VaccineController {
     public ResultWithData<VaccineResponse> get(@PathVariable("id") int id){
         Vaccine vaccine = this.vaccineManager.get(id);
         return ResultHelper.ok(this.modelMapper.forResponse().map(vaccine, VaccineResponse.class));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Result delete(@PathVariable ("id") int id){
+        this.vaccineManager.delete(id);
+        return ResultHelper.successfulOperation();
     }
 }

@@ -1,6 +1,7 @@
 package dev.patika.veterinary.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ public class Doctor {
     private String phone;
 
     @Column(name = "doctor_mail")
+    @Email
     private String mail;
 
     @Column(name = "doctor_address")

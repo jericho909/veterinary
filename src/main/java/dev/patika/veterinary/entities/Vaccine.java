@@ -1,5 +1,6 @@
 package dev.patika.veterinary.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Vaccine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
