@@ -1,5 +1,6 @@
 package dev.patika.veterinary.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,18 +16,19 @@ import java.time.LocalDate;
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "appointment_id", columnDefinition = "serial")
+    @Column(name = "appointment_id")
     private Long id;
-
-    @Temporal(TemporalType.DATE)
     @Column(name = "appointment_date")
     private LocalDate date;
 
     @ManyToOne
-    @JoinColumn(name = "animal_appointment_id", referencedColumnName = "animal_id")
+    @JoinColumn(name = "appointment_animal_id", referencedColumnName = "animal_id")
+    @JsonBackReference
     private Animal animal;
 
     @ManyToOne
-    @JoinColumn(name = "doctor_appointment_id", referencedColumnName = "doctor_id")
+    @JoinColumn(name = "appointment_doctor_id", referencedColumnName = "doctor_id")
+    @JsonBackReference
     private Doctor doctor;
+
 }

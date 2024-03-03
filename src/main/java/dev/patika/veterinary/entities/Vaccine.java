@@ -1,6 +1,7 @@
 package dev.patika.veterinary.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,24 +18,19 @@ import java.time.LocalDate;
 public class Vaccine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "vaccine_id", columnDefinition = "serial")
+    @Column(name = "vaccine_id")
     private Long id;
-
     @Column(name = "vaccine_name")
     private String name;
-
     @Column(name = "vaccine_code")
     private String code;
-
-    @Temporal(TemporalType.DATE)
-    @Column(name = "vaccine_protectionStrDate")
+    @Column(name = "vaccination_date")
     private LocalDate startDate;
-
-    @Temporal(TemporalType.DATE)
-    @Column(name = "vaccine_protectionEndDate")
+    @Column(name = "vaccination_end_date")
     private LocalDate endDate;
 
     @ManyToOne
-    @JoinColumn(name = "animal_vaccine_id", referencedColumnName = "animal_id")
+    @JoinColumn(name = "animal_id", referencedColumnName = "animal_id")
+    @JsonBackReference
     private Animal animal;
 }

@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VaccineSaveRequest {
+public class VaccineUpdateRequest {
     private String name;
     private String code;
     private LocalDate startDate;

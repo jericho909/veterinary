@@ -1,5 +1,6 @@
 package dev.patika.veterinary.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,31 +10,28 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@Table(name = "doctors")
+@Table(name = "owners")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Doctor {
+public class Owner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "doctor_id")
+    @Column(name = "owner_id")
     private Long id;
-    @Column(name = "doctor_name")
+    @Column(name = "owner_name")
     private String name;
-    @Column(name = "doctor_phone")
+    @Column(name = "owner_phone")
     private String phone;
-    @Column(name = "doctor_email")
+    @Column(name = "owner_email")
     private String email;
-    @Column(name = "doctor_address")
+    @Column(name = "owner_address")
     private String address;
-    @Column(name = "doctor_city")
+    @Column(name = "owner_city")
     private String city;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Appointment> appointments;
+    private List<Animal> animals;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
-    private List<AvailableDate> availableDates;
 }

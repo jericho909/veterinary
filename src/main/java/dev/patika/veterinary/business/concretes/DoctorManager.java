@@ -1,39 +1,44 @@
 package dev.patika.veterinary.business.concretes;
 
 import dev.patika.veterinary.business.abstracts.IDoctorService;
+import dev.patika.veterinary.core.config.modelMapper.IModelMapper;
 import dev.patika.veterinary.core.exceptions.NotFoundException;
 import dev.patika.veterinary.core.utils.Msg;
 import dev.patika.veterinary.dao.DoctorRepo;
+import dev.patika.veterinary.dto.requests.doctor.DoctorSaveRequest;
+import dev.patika.veterinary.dto.requests.doctor.DoctorUpdateRequest;
+import dev.patika.veterinary.dto.responses.doctor.DoctorResponse;
 import dev.patika.veterinary.entities.Doctor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.print.Doc;
 @Service
 public class DoctorManager implements IDoctorService {
     private final DoctorRepo doctorRepo;
-    @Autowired
-    public DoctorManager(DoctorRepo doctorRepo) {
+    private final IModelMapper modelMapper;
+
+    public DoctorManager(DoctorRepo doctorRepo, IModelMapper modelMapper) {
         this.doctorRepo = doctorRepo;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public Doctor save(Doctor doctor) {
-        return this.doctorRepo.save(doctor);
+    public DoctorResponse save(DoctorSaveRequest doctorSaveRequest) {
+        Doctor newDoctor = this.modelMapper.forRequest().map(doctorSaveRequest, Doctor.class);
+        this.doctorRepo.save(newDoctor);
+        return this.modelMapper.forResponse().map(newDoctor, DoctorResponse.class);
     }
 
     @Override
-    public Doctor get(int id) {
-        return this.doctorRepo.findById(id).orElseThrow(() -> new NotFoundException(Msg.NOT_FOUND));
+    public DoctorResponse get(Long id) {
+        return this.modelMapper.forResponse().map(this.doctorRepo.findById(id).orElseThrow(()-> new NotFoundException(Msg.NOT_FOUND)), DoctorResponse.class);
     }
 
     @Override
-    public Doctor update(Doctor doctor) {
-        this.get(Math.toIntExact(doctor.getId()));
-        return this.doctorRepo.save(doctor);
+    public void delete(Long id) {
+        this.doctorRepo.delete(this.doctorRepo.findById(id).orElseThrow(()-> new NotFoundException(Msg.NOT_FOUND)));
     }
 
     @Override
@@ -43,9 +48,15 @@ public class DoctorManager implements IDoctorService {
     }
 
     @Override
-    public boolean delete(int id) {
-        Doctor doctor = this.get(id);
-        this.doctorRepo.delete(doctor);
-        return true;
+    public DoctorResponse update(Long id, DoctorUpdateRequest doctorUpdateRequest) {
+        Doctor updatedDoctor = this.doctorRepo.findById(id).orElseThrow(()-> new NotFoundException(Msg.NOT_FOUND));
+        updatedDoctor.setName(doctorUpdateRequest.getName());
+        updatedDoctor.setPhone(doctorUpdateRequest.getPhone());
+        updatedDoctor.setEmail(doctorUpdateRequest.getEmail());
+        updatedDoctor.setAddress(doctorUpdateRequest.getAddress());
+        updatedDoctor.setCity(doctorUpdateRequest.getCity());
+        this.doctorRepo.save(updatedDoctor);
+
+        return this.modelMapper.forResponse().map(updatedDoctor, DoctorResponse.class);
     }
 }

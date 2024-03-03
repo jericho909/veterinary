@@ -1,24 +1,29 @@
 package dev.patika.veterinary.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.print.Doc;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "available_dates")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AvailableDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "available_date_id", columnDefinition = "serial")
+    @Column(name = "available_date_id")
     private Long id;
-
-    @Temporal(TemporalType.DATE)
     @Column(name = "available_date")
     private LocalDate date;
 
     @ManyToOne
-    @JoinColumn(name = "doctor_available_date_id", referencedColumnName = "doctor_id")
+    @JoinColumn(name = "available_date_doctor_id", referencedColumnName = "doctor_id")
+    @JsonBackReference
     private Doctor doctor;
 }

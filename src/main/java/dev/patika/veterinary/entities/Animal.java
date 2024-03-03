@@ -1,11 +1,13 @@
 package dev.patika.veterinary.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,60 +15,39 @@ import java.util.List;
 @Entity
 @Table(name = "animals")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+
 public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "animal_id", columnDefinition = "serial")
+    @Column(name = "animal_id")
     private Long id;
-
     @Column(name = "animal_name")
     private String name;
-
     @Column(name = "animal_species")
     private String species;
-
     @Column(name = "animal_breed")
     private String breed;
-
-    @Enumerated(EnumType.STRING)
     @Column(name = "animal_gender")
-    private GENDER gender;
-
-    @Column(name = "animal_colour")
-    private String colour;
-
-    @Temporal(TemporalType.DATE)
-    @Column(name = "dateOfBirth")
+    private String gender;
+    @Column(name = "animal_color")
+    private String color;
+    @Column(name = "animal_date_of_birth")
     private LocalDate dateOfBirth;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", referencedColumnName = "owner_id")
+    @JsonBackReference
+    private Owner owner;
+
     @OneToMany(mappedBy = "animal", cascade = CascadeType.REMOVE)
-    private List<Vaccine> vaccines;
+    @JsonManagedReference
+    private List<Vaccine> vaccinations;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "animal_customer_id", referencedColumnName = "customer_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Customer customer;
-
-    @OneToMany(mappedBy = "animal")
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.REMOVE)
     private List<Appointment> appointments;
 
-    private enum GENDER{
-        MALE,
-        FEMALE
-    }
 
-    @Override
-    public String toString() {
-        return "Animal{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", species='" + species + '\'' +
-                ", breed='" + breed + '\'' +
-                ", gender=" + gender +
-                ", colour='" + colour + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                '}';
-    }
+
 }

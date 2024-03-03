@@ -1,11 +1,13 @@
 package dev.patika.veterinary.dto.requests.animal;
 
-import dev.patika.veterinary.entities.Customer;
+import dev.patika.veterinary.entities.Owner;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +20,12 @@ public class AnimalSaveRequest {
     @NotNull
     private String breed;
     @NotNull
-    @Positive(message = "CUSTOMER ID CANNOT BE NEGATIVE")
-    private int customerId;
+    private String gender;
+    @NotNull
+    private String color;
+    @NotNull
+    private LocalDate dateOfBirth;
+    @Min(value = 1)
+    @NotNull
+    private Long ownerId;
 }

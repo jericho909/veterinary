@@ -1,39 +1,42 @@
 package dev.patika.veterinary.business.concretes;
 
 import dev.patika.veterinary.business.abstracts.IAnimalService;
+import dev.patika.veterinary.core.config.modelMapper.IModelMapper;
 import dev.patika.veterinary.core.exceptions.NotFoundException;
 import dev.patika.veterinary.core.utils.Msg;
 import dev.patika.veterinary.dao.AnimalRepo;
+import dev.patika.veterinary.dto.requests.animal.AnimalSaveRequest;
+import dev.patika.veterinary.dto.requests.animal.AnimalUpdateRequest;
+import dev.patika.veterinary.dto.responses.animal.AnimalResponse;
 import dev.patika.veterinary.entities.Animal;
-import org.springframework.dao.NonTransientDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AnimalManager implements IAnimalService {
     private final AnimalRepo animalRepo;
+    private final IModelMapper modelMapper;
 
-    public AnimalManager(AnimalRepo animalRepo) {
+    public AnimalManager(AnimalRepo animalRepo, IModelMapper modelMapper) {
         this.animalRepo = animalRepo;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public Animal save(Animal animal) {
-        return this.animalRepo.save(animal);
+    public AnimalResponse save(AnimalSaveRequest animalSaveRequest) {
+        Animal newAnimal = this.modelMapper.forRequest().map(animalSaveRequest, Animal.class);
+        this.animalRepo.save(newAnimal);
+        return this.modelMapper.forResponse().map(newAnimal, AnimalResponse.class);
     }
 
     @Override
-    public Animal get(int id) {
-        return this.animalRepo.findById((long) id).orElseThrow(() -> new NotFoundException(Msg.NOT_FOUND) {
-        });
-    }
-
-    @Override
-    public Animal update(Animal animal) {
-        this.get(Math.toIntExact(animal.getId()));
-        return this.animalRepo.save(animal);
+    public AnimalResponse get(Long id) {
+        Animal animal = this.animalRepo.findById(id).orElseThrow(() -> new NotFoundException(Msg.NOT_FOUND));
+        return this.modelMapper.forResponse().map(animal, AnimalResponse.class);
     }
 
     @Override
@@ -43,9 +46,27 @@ public class AnimalManager implements IAnimalService {
     }
 
     @Override
-    public boolean delete(int id) {
-        Animal animalToBeDeleted = this.get(id);
+    public void delete(Long id) {
+        Animal animalToBeDeleted = this.animalRepo.findById(id).orElseThrow(() -> new NotFoundException(Msg.NOT_FOUND));
         this.animalRepo.delete(animalToBeDeleted);
-        return true;
+    }
+
+    @Override
+    public AnimalResponse update(Long id, AnimalUpdateRequest animalUpdateRequest) {
+        Animal animalToBeUpdated = this.animalRepo.findById(id).orElseThrow(() -> new NotFoundException(Msg.NOT_FOUND));
+
+        animalToBeUpdated.setName(animalUpdateRequest.getName());
+        animalToBeUpdated.setSpecies(animalUpdateRequest.getSpecies());
+        animalToBeUpdated.setBreed(animalUpdateRequest.getBreed());
+        animalToBeUpdated.setGender(animalUpdateRequest.getGender());
+        animalToBeUpdated.setColor(animalUpdateRequest.getColor());
+        animalToBeUpdated.setDateOfBirth(animalUpdateRequest.getDateOfBirth());
+
+        return this.modelMapper.forResponse().map(this.animalRepo.save(animalToBeUpdated), AnimalResponse.class);
+    }
+
+    @Override
+    public List<Animal> findByName(String name) {
+        return this.animalRepo.findByName(name);
     }
 }

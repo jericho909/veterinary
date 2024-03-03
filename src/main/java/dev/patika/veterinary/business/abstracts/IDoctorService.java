@@ -1,14 +1,15 @@
 package dev.patika.veterinary.business.abstracts;
 
+import dev.patika.veterinary.dto.requests.doctor.DoctorSaveRequest;
+import dev.patika.veterinary.dto.requests.doctor.DoctorUpdateRequest;
+import dev.patika.veterinary.dto.responses.doctor.DoctorResponse;
 import dev.patika.veterinary.entities.Doctor;
 import org.springframework.data.domain.Page;
 
-import javax.print.Doc;
-
 public interface IDoctorService {
-    Doctor save (Doctor doctor);
-    Doctor get(int id);
-    Doctor update(Doctor doctor);
+    DoctorResponse save(DoctorSaveRequest doctorSaveRequest);
+    DoctorResponse get(Long id);
+    void delete(Long id);
     Page<Doctor> cursor(int page, int pageSize);
-    boolean delete(int id);
+    DoctorResponse update(Long id, DoctorUpdateRequest doctorUpdateRequest);
 }
