@@ -8,9 +8,13 @@ import dev.patika.veterinary.core.utils.ResultHelper;
 import dev.patika.veterinary.dto.requests.vaccine.VaccineSaveRequest;
 import dev.patika.veterinary.dto.requests.vaccine.VaccineUpdateRequest;
 import dev.patika.veterinary.dto.responses.vaccine.VaccineResponse;
+import dev.patika.veterinary.entities.Vaccine;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/vaccines")
@@ -46,5 +50,23 @@ public class VaccineController {
     @ResponseStatus(HttpStatus.OK)
     public ResultWithData<VaccineResponse> update(@PathVariable ("id") Long id, @Valid @RequestBody VaccineUpdateRequest vaccineUpdateRequest){
         return ResultHelper.ok(this.vaccineManager.update(id, vaccineUpdateRequest));
+    }
+
+    @GetMapping("/findByAnimalId")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultWithData<List<VaccineResponse>> findAllByAnimalId(@RequestParam ("animalId") Long animalId) {
+        List<Vaccine> vaccines = this.vaccineManager.findAllByAnimalId(animalId);
+        List<VaccineResponse> vaccineResponses = vaccines.stream().map(vaccine -> this.modelMapper.forResponse().map(vaccine, VaccineResponse.class)).toList();
+
+        return ResultHelper.ok(vaccineResponses);
+    }
+
+    @GetMapping("/findByVaccineDates")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultWithData<List<VaccineResponse>> findByVaccineDates(@RequestParam ("startDate")LocalDate startDate, @RequestParam ("endDate") LocalDate endDate){
+        List<Vaccine> vaccines = this.vaccineManager.findAllByEndDateBetween(startDate, endDate);
+        List<VaccineResponse> vaccineResponses = vaccines.stream().map(vaccine -> this.modelMapper.forResponse().map(vaccine, VaccineResponse.class)).toList();
+
+        return ResultHelper.ok(vaccineResponses);
     }
 }

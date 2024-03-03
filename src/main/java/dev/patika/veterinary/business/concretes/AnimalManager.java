@@ -5,10 +5,12 @@ import dev.patika.veterinary.core.config.modelMapper.IModelMapper;
 import dev.patika.veterinary.core.exceptions.NotFoundException;
 import dev.patika.veterinary.core.utils.Msg;
 import dev.patika.veterinary.dao.AnimalRepo;
+import dev.patika.veterinary.dao.OwnerRepo;
 import dev.patika.veterinary.dto.requests.animal.AnimalSaveRequest;
 import dev.patika.veterinary.dto.requests.animal.AnimalUpdateRequest;
 import dev.patika.veterinary.dto.responses.animal.AnimalResponse;
 import dev.patika.veterinary.entities.Animal;
+import dev.patika.veterinary.entities.Owner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,15 +22,19 @@ import java.util.List;
 public class AnimalManager implements IAnimalService {
     private final AnimalRepo animalRepo;
     private final IModelMapper modelMapper;
+    private final OwnerRepo ownerRepo;
 
-    public AnimalManager(AnimalRepo animalRepo, IModelMapper modelMapper) {
+    public AnimalManager(AnimalRepo animalRepo, IModelMapper modelMapper, OwnerRepo ownerRepo) {
         this.animalRepo = animalRepo;
         this.modelMapper = modelMapper;
+        this.ownerRepo = ownerRepo;
     }
 
     @Override
     public AnimalResponse save(AnimalSaveRequest animalSaveRequest) {
         Animal newAnimal = this.modelMapper.forRequest().map(animalSaveRequest, Animal.class);
+        Owner owner = this.ownerRepo.findById(animalSaveRequest.getOwnerId()).orElseThrow(() -> new NotFoundException(Msg.NOT_FOUND));
+        newAnimal.setOwner(owner);
         this.animalRepo.save(newAnimal);
         return this.modelMapper.forResponse().map(newAnimal, AnimalResponse.class);
     }

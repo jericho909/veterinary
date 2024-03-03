@@ -1,12 +1,14 @@
 package dev.patika.veterinary.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "appointments")
@@ -19,7 +21,7 @@ public class Appointment {
     @Column(name = "appointment_id")
     private Long id;
     @Column(name = "appointment_date")
-    private LocalDate date;
+    private LocalDateTime date;
 
     @ManyToOne
     @JoinColumn(name = "appointment_animal_id", referencedColumnName = "animal_id")
