@@ -33,6 +33,7 @@ public class AnimalManager implements IAnimalService {
     @Override
     public AnimalResponse save(AnimalSaveRequest animalSaveRequest) {
         Animal newAnimal = this.modelMapper.forRequest().map(animalSaveRequest, Animal.class);
+        newAnimal.setId(null);
         Owner owner = this.ownerRepo.findById(animalSaveRequest.getOwnerId()).orElseThrow(() -> new NotFoundException(Msg.NOT_FOUND));
         newAnimal.setOwner(owner);
         this.animalRepo.save(newAnimal);
@@ -67,7 +68,6 @@ public class AnimalManager implements IAnimalService {
         animalToBeUpdated.setGender(animalUpdateRequest.getGender());
         animalToBeUpdated.setColor(animalUpdateRequest.getColor());
         animalToBeUpdated.setDateOfBirth(animalUpdateRequest.getDateOfBirth());
-
         return this.modelMapper.forResponse().map(this.animalRepo.save(animalToBeUpdated), AnimalResponse.class);
     }
 

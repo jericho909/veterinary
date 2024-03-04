@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.domain.Persistable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -47,7 +48,5 @@ public class Animal {
 
     @OneToMany(mappedBy = "animal", cascade = CascadeType.REMOVE)
     private List<Appointment> appointments;
-
-
 
 }

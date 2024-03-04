@@ -8,9 +8,14 @@ import dev.patika.veterinary.core.utils.ResultHelper;
 import dev.patika.veterinary.dto.requests.appointment.AppointmentSaveRequest;
 import dev.patika.veterinary.dto.requests.appointment.AppointmentUpdateRequest;
 import dev.patika.veterinary.dto.responses.appointment.AppointmentResponse;
+import dev.patika.veterinary.entities.Appointment;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/appointments")
@@ -46,5 +51,23 @@ public class AppointmentController {
     @ResponseStatus(HttpStatus.OK)
     public ResultWithData<AppointmentResponse> update(@PathVariable ("id") Long id, @Valid @RequestBody AppointmentUpdateRequest appointmentUpdateRequest){
         return ResultHelper.ok(this.appointmentManager.update(id, appointmentUpdateRequest));
+    }
+
+    @GetMapping("/findByDoctorId")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultWithData<List<AppointmentResponse>> findByDoctorIdAndDate(@RequestParam ("doctorId") Long id, @RequestParam ("startTime") LocalDate startTime, @RequestParam ("endTime") LocalDate endTime){
+        List<Appointment> appointments = this.appointmentManager.findAllByDoctorIdAndDateBetween(id, startTime, endTime);
+        List<AppointmentResponse> appointmentResponses = appointments.stream().map(appointment -> this.modelMapper.forResponse().map(appointment, AppointmentResponse.class)).toList();
+
+        return ResultHelper.ok(appointmentResponses);
+    }
+
+    @GetMapping("/findByAnimalId")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultWithData<List<AppointmentResponse>> findByAnimalIdAndDate(@RequestParam ("animalId") Long id, @RequestParam ("startTime") LocalDate startTime, @RequestParam ("endTime") LocalDate endTime){
+        List<Appointment> appointments = this.appointmentManager.findAllByAnimalIdAndDateBetween(id, startTime, endTime);
+        List<AppointmentResponse> appointmentResponses = appointments.stream().map(appointment -> this.modelMapper.forResponse().map(appointment, AppointmentResponse.class)).toList();
+
+        return ResultHelper.ok(appointmentResponses);
     }
 }
