@@ -40,4 +40,4 @@ Welcome to the Veterinary Management System project! This project aims to provid
 
 1.  Clone the repository to your local machine.
 2.  Configure your database settings in the application.properties file.
-3.  Run the application and navigate to the provided API documentation to explore the endpoints.
+3.  Run the application and navigate to the [provided API documentation](https://github.com/jericho909/veterinary/blob/main/Documentation.md) to explore the endpoints.
