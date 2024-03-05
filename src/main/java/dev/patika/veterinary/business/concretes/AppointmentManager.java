@@ -13,6 +13,9 @@ import dev.patika.veterinary.dto.responses.appointment.AppointmentResponse;
 import dev.patika.veterinary.entities.Animal;
 import dev.patika.veterinary.entities.Appointment;
 import dev.patika.veterinary.entities.Doctor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -67,6 +70,12 @@ public class AppointmentManager implements IAppointmentService {
     public void delete(Long id) {
         Appointment appointment = this.appointmentRepo.findById(id).orElseThrow(()-> new NotFoundException(Msg.NOT_FOUND));
         this.appointmentRepo.delete(appointment);
+    }
+
+    @Override
+    public Page<Appointment> cursor(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        return this.appointmentRepo.findAll(pageable);
     }
 
     @Override

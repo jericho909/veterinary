@@ -7,9 +7,13 @@ import dev.patika.veterinary.core.result.ResultWithData;
 import dev.patika.veterinary.core.utils.ResultHelper;
 import dev.patika.veterinary.dto.requests.vaccine.VaccineSaveRequest;
 import dev.patika.veterinary.dto.requests.vaccine.VaccineUpdateRequest;
+import dev.patika.veterinary.dto.responses.CursorResponse;
+import dev.patika.veterinary.dto.responses.animal.AnimalResponse;
 import dev.patika.veterinary.dto.responses.vaccine.VaccineResponse;
+import dev.patika.veterinary.entities.Animal;
 import dev.patika.veterinary.entities.Vaccine;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +48,15 @@ public class VaccineController {
     @ResponseStatus(HttpStatus.OK)
     public ResultWithData<VaccineResponse> get(@PathVariable ("id") Long id){
         return ResultHelper.ok(this.vaccineManager.get(id));
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ResultWithData<CursorResponse<VaccineResponse>> cursor(@RequestParam (value = "page", required = false, defaultValue = "0") int page,
+                                                                 @RequestParam (value = "pageSize", required = false, defaultValue = "10") int pageSize){
+        Page<Vaccine> vaccines = this.vaccineManager.cursor(page, pageSize);
+        Page<VaccineResponse> vaccineResponses = vaccines.map(vaccine -> this.modelMapper.forResponse().map(vaccine, VaccineResponse.class));
+        return ResultHelper.cursor(vaccineResponses);
     }
 
     @PutMapping("/{id}")

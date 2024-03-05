@@ -7,6 +7,7 @@ import dev.patika.veterinary.core.utils.Msg;
 import dev.patika.veterinary.dao.AvailableDateRepo;
 import dev.patika.veterinary.dao.DoctorRepo;
 import dev.patika.veterinary.dto.requests.availableDate.AvailableDateSaveRequest;
+import dev.patika.veterinary.dto.requests.availableDate.AvailableDateUpdateRequest;
 import dev.patika.veterinary.dto.responses.availableDate.AvailableDateResponse;
 import dev.patika.veterinary.entities.AvailableDate;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class AvailableDateManager implements IAvailableDateService {
     @Override
     public AvailableDateResponse save(AvailableDateSaveRequest availableDateSaveRequest) {
         AvailableDate availableDate = this.modelMapper.forRequest().map(availableDateSaveRequest, AvailableDate.class);
+        availableDate.setId(null);
         availableDate.setDoctor(this.doctorRepo.findById(availableDateSaveRequest.getDoctorId()).orElseThrow(()-> new NotFoundException(Msg.NOT_FOUND)));
         this.availableDateRepo.save(availableDate);
         return this.modelMapper.forResponse().map(availableDate, AvailableDateResponse.class);
@@ -42,5 +44,14 @@ public class AvailableDateManager implements IAvailableDateService {
     public void delete(Long id) {
         AvailableDate availableDate = this.availableDateRepo.findById(id).orElseThrow(()-> new NotFoundException(Msg.NOT_FOUND));
         this.availableDateRepo.delete(availableDate);
+    }
+
+    @Override
+    public AvailableDateResponse update(Long id, AvailableDateUpdateRequest availableDateUpdateRequest) {
+        AvailableDate availableDateToUpdate = this.availableDateRepo.findById(id).orElseThrow(()-> new NotFoundException(Msg.NOT_FOUND));
+        availableDateToUpdate.setDate(availableDateUpdateRequest.getDate());
+        availableDateToUpdate.setDoctor(this.doctorRepo.findById(availableDateUpdateRequest.getDoctorId()).orElseThrow(()-> new NotFoundException(Msg.NOT_FOUND)));
+        this.availableDateRepo.save(availableDateToUpdate);
+        return this.modelMapper.forResponse().map(availableDateToUpdate, AvailableDateResponse.class);
     }
 }

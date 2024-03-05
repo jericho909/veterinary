@@ -1,8 +1,11 @@
 package dev.patika.veterinary.dto.requests.vaccine;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDate;
 
@@ -10,9 +13,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VaccineSaveRequest {
+    @NotNull(message = "NAME CANNOT BE EMPTY")
     private String name;
+    @NotNull(message = "CODE CANNOT BE EMPTY")
     private String code;
+    @NotNull(message = "START DATE CANNOT BE EMPTY")
     private LocalDate startDate;
+    @NotNull(message = "END DATE CANNOT BE EMPTY")
     private LocalDate endDate;
+    @NotNull(message = "ANIMAL ID CANNOT BE EMPTY")
+    @Min(value = 1)
     private Long animalId;
 }

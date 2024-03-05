@@ -7,8 +7,13 @@ import dev.patika.veterinary.core.result.ResultWithData;
 import dev.patika.veterinary.core.utils.ResultHelper;
 import dev.patika.veterinary.dto.requests.doctor.DoctorSaveRequest;
 import dev.patika.veterinary.dto.requests.doctor.DoctorUpdateRequest;
+import dev.patika.veterinary.dto.responses.CursorResponse;
+import dev.patika.veterinary.dto.responses.animal.AnimalResponse;
 import dev.patika.veterinary.dto.responses.doctor.DoctorResponse;
+import dev.patika.veterinary.entities.Animal;
+import dev.patika.veterinary.entities.Doctor;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,5 +53,14 @@ public class DoctorController {
     @ResponseStatus(HttpStatus.OK)
     public ResultWithData<DoctorResponse> get(@PathVariable ("id") Long id){
         return ResultHelper.ok(this.doctorManager.get(id));
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ResultWithData<CursorResponse<DoctorResponse>> cursor(@RequestParam (value = "page", required = false, defaultValue = "0") int page,
+                                                                 @RequestParam (value = "pageSize", required = false, defaultValue = "10") int pageSize){
+        Page<Doctor> doctors = this.doctorManager.cursor(page, pageSize);
+        Page<DoctorResponse> doctorResponses = doctors.map(doctor -> this.modelMapper.forResponse().map(doctor, DoctorResponse.class));
+        return ResultHelper.cursor(doctorResponses);
     }
 }

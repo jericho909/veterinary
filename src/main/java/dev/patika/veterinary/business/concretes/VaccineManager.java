@@ -37,6 +37,7 @@ public class VaccineManager implements IVaccineService {
             throw new RuntimeException("INOCULATION STILL ACTIVE, WAIT FOR VACCINATION END DATE");
         }
         Vaccine newVaccine = this.modelMapper.forRequest().map(vaccineSaveRequest, Vaccine.class);
+        newVaccine.setId(null);
         this.vaccineRepo.save(newVaccine);
         return this.modelMapper.forResponse().map(newVaccine, VaccineResponse.class);
     }

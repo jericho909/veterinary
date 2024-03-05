@@ -66,7 +66,7 @@ public class OwnerController {
         return ResultHelper.cursor(ownerResponses);
     }
 
-    @GetMapping("/byOwnerName")
+    @GetMapping("/findByOwnerName")
     @ResponseStatus(HttpStatus.OK)
     public ResultWithData<List<OwnerResponse>> getByName(@RequestParam ("name") String name){
         List<Owner> owners = this.ownerManager.findByName(name);

@@ -13,19 +13,19 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AnimalSaveRequest {
-    @NotNull
+    @NotNull(message = "NAME CANNOT BE EMPTY")
     private String name;
-    @NotNull
+    @NotNull(message = "SPECIES CANNOT BE EMPTY")
     private String species;
-    @NotNull
+    @NotNull(message = "BREED CANNOT BE EMPTY")
     private String breed;
-    @NotNull
+    @NotNull(message = "GENDER CANNOT BE EMPTY")
     private String gender;
-    @NotNull
+    @NotNull(message = "COLOR CANNOT BE EMPTY")
     private String color;
-    @NotNull
+    @NotNull(message = "DATE OF BIRTH CANNOT BE EMPTY")
     private LocalDate dateOfBirth;
     @Min(value = 1)
-    @NotNull
+    @NotNull(message = "OWNER ID CANNOT BE NULL")
     private Long ownerId;
 }
