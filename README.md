@@ -34,7 +34,7 @@ Welcome to the Veterinary Management System project! This project aims to provid
 -   Java Spring Boot
 -   Spring Web
 -   Spring Data JPA
--   PostgreSQL or MySQL
+-   PostgreSQL
 
 ## Getting Started
 
