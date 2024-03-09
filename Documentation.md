@@ -21,69 +21,15 @@
 }
 
 
-### Save Animal
+| Operation               | URL                        | Method | Request Body       | Description                                                                                   | Success Response            |
+|-------------------------|----------------------------|--------|--------------------|-----------------------------------------------------------------------------------------------|------------------------------|
+| Save Animal             | /v1/animals                | POST   | AnimalSaveRequest  | Creates a new animal.                                                                        | 201 CREATED, Content: AnimalResponse |
+| Get Animal by ID        | /v1/animals/{id}           | GET    | Path Parameters: id | Retrieves an animal by its ID.                                                               | 200 OK, Content: AnimalResponse |
+| Update Animal           | /v1/animals/{id}           | PUT    | Path Parameters: id | Updates an existing animal.                                                                   | 200 OK, Content: AnimalResponse |
+| Delete Animal           | /v1/animals/{id}           | DELETE | Path Parameters: id | Deletes an animal by its ID.                                                                  | 200 OK                       |
+| Get Animals with Pagination | /v1/animals            | GET    | Query Parameters: page (int, optional, default: 0), pageSize (int, optional, default: 10) | Retrieves animals with pagination support.                                                   | 200 OK, Content: CursorResponse |
+| Find Animals by Name    | /v1/animals/findByName    | GET    | Query Parameters: name (String) | Finds animals by their name.                                                                | 200 OK, Content: List         |
 
--   **URL:** `/v1/animals`
--   **Method:** `POST`
--   **Request Body:** AnimalSaveRequest
--   **Description:** Creates a new animal.
--   **Success Response:**
-    -   **Code:** `201 CREATED`
-    -   **Content:** AnimalResponse
-
-### Get Animal by ID
-
--   **URL:** `/v1/animals/{id}`
--   **Method:** `GET`
--   **Path Parameters:** `id` (Long)
--   **Description:** Retrieves an animal by its ID.
--   **Success Response:**
-    -   **Code:** `200 OK`
-    -   **Content:** AnimalResponse
-
-### Update Animal
-
--   **URL:** `/v1/animals/{id}`
--   **Method:** `PUT`
--   **Path Parameters:** `id` (Long)
--   **Request Body:** AnimalUpdateRequest
--   **Description:** Updates an existing animal.
--   **Success Response:**
-    -   **Code:** `200 OK`
-    -   **Content:** AnimalResponse
-
-### Delete Animal
-
--   **URL:** `/v1/animals/{id}`
--   **Method:** `DELETE`
--   **Path Parameters:** `id` (Long)
--   **Description:** Deletes an animal by its ID.
--   **Success Response:**
-    -   **Code:** `200 OK`
-
-### Get Animals with Pagination
-
--   **URL:** `/v1/animals`
--   **Method:** `GET`
--   **Query Parameters:**
-    -   `page` (int, optional, default: 0)
-    -   `pageSize` (int, optional, default: 10)
--   **Description:** Retrieves animals with pagination support.
--   **Success Response:**
-    -   **Code:** `200 OK`
-    -   **Content:** CursorResponse<AnimalResponse>
-
-### Find Animals by Name
-
--   **URL:** `/v1/animals/findByName`
--   **Method:** `GET`
--   **Query Parameters:**
-    -   `name` (String)
--   **Description:** Finds animals by their name.
--   **Success Response:**
-    -   **Code:** `200 OK`
-    -   **Content:** List<AnimalResponse>
-    - 
 ## Appointments
 ***AppointmentSaveRequest:***
 { 
